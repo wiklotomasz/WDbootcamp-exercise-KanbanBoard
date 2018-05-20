@@ -34,17 +34,17 @@ export function getLanes(req, res) {
   });
 }
 
-export function deleteLane(req, res) {
-  Lane.findOne({ id: req.params.laneId }).exec((err, lane) => {
-    if (err) {
-      res.status(500).send(err);
-    }
+// export function deleteLane(req, res) {
+//   Lane.findOne({ id: req.params.laneId }).exec((err, lane) => {
+//     if (err) {
+//       res.status(500).send(err);
+//     }
 
-    lane.remove(() => {
-      res.status(200).end();
-    });
-  });
-}
+//     lane.remove(() => {
+//       res.status(200).end();
+//     });
+//   });
+// }
 
 export function editLaneName(req,res) {
 
@@ -61,6 +61,31 @@ export function editLaneName(req,res) {
         res.status(500).send(err);
       }
       res.json(saved);
+    });
+  });
+}
+
+export function deleteLane(req, res) {
+  Lane.findOne({ id: req.params.laneId }).exec((err, lane) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+    //delete note from lane
+    lane.notes.forEach((note) => {
+      Note.findOne({ id: note.id }).exec((err, note) => {
+        if (err) {
+          res.status(500).send(err);
+        }
+
+        note.remove(() => {
+          res.status(200).end();
+        });
+      })
+    })
+
+    lane.remove(() => {
+      res.status(200).end();
     });
   });
 }
