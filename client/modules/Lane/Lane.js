@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import NotesContainer from '../Note/NotesContainer';
 
-import Edit from '../Edit.js';
+import Edit from '../../components/Edit.js';
 import styles from './Lane.css';
 
 const Lane = (props) => {
