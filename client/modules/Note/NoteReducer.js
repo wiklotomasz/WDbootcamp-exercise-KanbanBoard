@@ -1,9 +1,9 @@
 // Import Actions
 import { CREATE_NOTE, UPDATE_NOTE, DELETE_NOTE, EDIT_NOTE, CREATE_NOTES } from './NoteActions';
 
-
+import omit from 'lodash/omit';
 // Initial State
-const initialState = [];
+const initialState = {};
 
 export default function notes(state = initialState, action) {
   switch (action.type) {

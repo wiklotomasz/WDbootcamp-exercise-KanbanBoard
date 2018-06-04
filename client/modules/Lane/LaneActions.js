@@ -1,8 +1,7 @@
 import callApi from '../../util/apiCaller';
 import { lanes } from '../../util/schema';
 import { normalize } from 'normalizr';
-
-import createNotes from '../Note/NoteActions.js';
+import { createNotes, deleteNotes } from '../Note/NoteActions';
 
 // Export Constants
 export const CREATE_LANE = 'CREATE_LANE';
@@ -10,6 +9,7 @@ export const UPDATE_LANE = 'UPDATE_LANE';
 export const DELETE_LANE = 'DELETE_LANE';
 export const EDIT_LANE = 'EDIT_LANE';
 export const CREATE_LANES = 'CREATE_LANES';
+export const MOVE_BETWEEN_LANES = 'MOVE_BETWEEN_LANES';
 
 // Export Actions
 export function createLane(lane) {
@@ -18,7 +18,7 @@ export function createLane(lane) {
     lane: {
       notes: [],
       ...lane,
-    }
+    },
   };
 }
 
@@ -32,22 +32,22 @@ export function updateLane(lane) {
 export function deleteLane(laneId) {
   return {
     type: DELETE_LANE,
-    laneId
+    laneId,
   };
 }
 
 export function editLane(laneId) {
   return {
     type: EDIT_LANE,
-    landeId
-  }
+    laneId,
+  };
 }
 
 export function fetchLanes() {
   return (dispatch) => {
     return callApi('lanes').then(res => {
       const normalized = normalize(res.lanes, lanes);
-      const {lanes: normalizedLanes, notes} = normalized.entities;
+      const { lanes: normalizedLanes, notes } = normalized.entities;
       dispatch(createLanes(normalizedLanes));
       dispatch(createNotes(notes));
     });
@@ -71,16 +71,25 @@ export function createLaneRequest(lane) {
 
 export function deleteLaneRequest(laneId) {
   return (dispatch) => {
-    return callApi('lanes', 'delete', lane.id).then(res => {
-      dispatch(deleteLane(res));
+    return callApi(`lanes/${laneId}`, 'delete').then(() => {
+      dispatch(deleteLane(laneId));
     });
   };
 }
 
 export function updateLaneRequest(lane) {
   return (dispatch) => {
-    return callApi('lanes', 'put', lane).then(res => {
-      dispatch(updateLane(res));
+    return callApi(`lanes/${lane.id}`, 'put', lane).then(() => {
+      dispatch(updateLane(lane));
     });
+  };
+}
+
+export function moveBetweenLanes(targetLaneId, noteId, sourceLaneId) {
+  return {
+    type: MOVE_BETWEEN_LANES,
+    targetLaneId,
+    noteId,
+    sourceLaneId,
   };
 }
