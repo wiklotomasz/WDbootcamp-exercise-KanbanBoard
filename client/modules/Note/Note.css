@@ -3,4 +3,6 @@
 .Note {
     list-style: none;
     margin-top: 15px;
+	background: rosybrown;
+    min-height: 50px;
 }

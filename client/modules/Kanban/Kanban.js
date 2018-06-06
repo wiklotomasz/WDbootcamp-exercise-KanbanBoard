@@ -30,7 +30,7 @@ const mapDispatchToProps = {
   createLane: createLaneRequest,
 };
 
-export default composte(
-connect(mapStateToProps, mapDispatchToProps),
-DragDropContext(HTML5Backend)
+export default compose(
+	connect(mapStateToProps, mapDispatchToProps),
+	DragDropContext(HTML5Backend)
 )(Kanban);

@@ -2,5 +2,8 @@
 
 .Lane {
 	display: block;
-	margin: 0 auto;
+    width: 200px;
+    min-height: 200px;
+    background: pink;
+    margin: 10px;
 }

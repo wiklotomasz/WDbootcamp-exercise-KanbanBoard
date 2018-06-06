@@ -21,17 +21,16 @@ render() {
 
     const dragSource = editing ? a => a : connectDragSource;
 
-   return dragSource(connectDropTarget(
-     <li
-       className={styles.Note}
-       style={{
-         opacity: isDragging ? 0 : 1,
-       }}
-     >
-       {children}
-     </li>
-   ));
-
+    return dragSource(connectDropTarget(
+      <li
+        className={styles.Note}
+        style={{
+          opacity: isDragging ? 0 : 1,
+        }}
+      >
+        {children}
+      </li>
+    ));
   }
 }
 
@@ -44,29 +43,33 @@ const noteSource = {
   },
   isDragging(props, monitor) {
     return props.id === monitor.getItem().id;
-  }
+  },
 };
 
 const noteTarget = {
-  hover(targetProps, monitor) {
+  drop(targetProps, monitor) {
     const sourceProps = monitor.getItem();
 
     if (targetProps.id !== sourceProps.id) {
       targetProps.moveWithinLane(targetProps.laneId, targetProps.id, sourceProps.id);
     }
-  }
+  },
 };
 
 Note.propTypes = {
   children: PropTypes.any,
+  connectDragSource: PropTypes.func,
+  connectDropTarget: PropTypes.func,
+  isDragging: PropTypes.bool,
+  editing: PropTypes.bool,
 };
 
 export default compose(
   DragSource(ItemTypes.NOTE, noteSource, (connect, monitor) => ({
     connectDragSource: connect.dragSource(),
-    isDragging: monitor.isDragging()
+    isDragging: monitor.isDragging(),
   })),
   DropTarget(ItemTypes.NOTE, noteTarget, (connect) => ({
-    connectDropTarget: connect.dropTarget()
+    connectDropTarget: connect.dropTarget(),
   }))
 )(Note);

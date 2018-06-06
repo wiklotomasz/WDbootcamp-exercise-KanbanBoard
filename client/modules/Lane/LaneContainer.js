@@ -13,18 +13,18 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const noteTarget = {
- hover(targetProps, monitor) {
-   const sourceProps = monitor.getItem();
-   const { id: noteId, laneId: sourceLaneId } = sourceProps;
+  drop(targetProps, monitor) {
+    const sourceProps = monitor.getItem();
+    const { id: noteId, laneId: sourceLaneId } = sourceProps;
 
-   if (!targetProps.lane.notes.length) {
-     targetProps.moveBetweenLanes(
-       targetProps.lane.id,
-       noteId,
-       sourceLaneId,
-     );
-   }
- },
+    if (!monitor.didDrop()) {
+      targetProps.moveBetweenLanes(
+        targetProps.lane.id,
+        noteId,
+        sourceLaneId,
+      );
+    }
+  },
 };
 
 const mapDispatchToProps = {
@@ -38,6 +38,6 @@ const mapDispatchToProps = {
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   DropTarget(ItemTypes.NOTE, noteTarget, (dragConnect) => ({
-    connectDropTarget: dragConnect.dropTarget()
+    connectDropTarget: dragConnect.dropTarget(),
   }))
-)(Lane)
+)(Lane);
